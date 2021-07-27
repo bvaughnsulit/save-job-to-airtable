@@ -1,31 +1,28 @@
 var callback = function sendToAirtable(tab){
 
-  var title = prompt("title");
-  if (title){
-    var company = prompt("company");
-      if (company){
-        var interest = prompt("interest");
-          if ([1, 2, 3].includes(interest)){
-            const body = {
-              "fields": {
-                "Title": title,
-                "URL": tab.url,
-                "Company": [
-                  company
-                ],
-                "Interest": interest,
-              },
-              "typecast": true
-            }
+  const title = prompt("title", "default");
+  //const company = prompt("company");
+  //const interest = prompt("interest");
+
+
+  //         if ([1, 2, 3].includes(interest)){
+  //           const body = {
+  //             "fields": {
+  //               "Title": title,
+  //               "URL": tab.url,
+  //               "Company": [
+  //                 company
+  //               ],
+  //               "Interest": interest,
+  //             },
+  //             "typecast": true
+  //           }
           
-            if (title != undefined && company != undefined){
-              postToAirtable(body)
-            } else {
-              alert("title and company required")
-            }
-      }
-    }
-  }
+  //           if (title != undefined && company != undefined){
+  //             postToAirtable(body)
+  //           } else {
+  //             alert("title and company required")
+
 }
 
 function postToAirtable(postBody){
