@@ -1,14 +1,28 @@
-let submitButton = document.getElementById('submit');
+let url
 
-submitButton.onclick = function(element) {
-  const position = document.getElementById('position').value;
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+   url = tabs[0].url;
+
+   chrome.scripting.executeScript({
+    target: { tabId: tabs[0].id },
+    function: getSelection
+  },
+  (injectionResults) => {
+    const selectedText = injectionResults[0].result
+    document.getElementById('title').value = selectedText
+  });
+});
+
+
+document.getElementById('submit').onclick = function(element) {
+  const title = document.getElementById('title').value;
   const company = document.getElementById('company').value;
   const interest = document.getElementById('interest').value;
   
   const body = {
     "fields": {
-      "Title": position,
-      //"URL": tab.url,
+      "Title": title,
+      "URL": url,
       "Company": [
         company
       ],
@@ -18,7 +32,6 @@ submitButton.onclick = function(element) {
   }
 
   postToAirtable(body);
-
 };
 
 function postToAirtable(postBody){
@@ -35,4 +48,8 @@ function postToAirtable(postBody){
       } 
   }
   xhr.send(JSON.stringify(postBody));
+}
+
+function getSelection(){
+  return window.getSelection().toString()
 }
