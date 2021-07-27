@@ -1,0 +1,25 @@
+{
+  "name": "New Job To Airtable",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "",
+
+  "browser_action": {
+    "default_icon": {
+      "16": "icon.png"
+    },
+    "default_title": "Send to Airtable"
+  },
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+
+
+  "permissions": [
+    "activeTab"  ]
+}
+
+
+
