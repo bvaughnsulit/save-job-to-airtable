@@ -1,3 +1,4 @@
+import { API_KEY, BASE_ID } from './.config.js';
 let url
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
@@ -14,7 +15,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 });
 
 
-document.getElementById('submit').onclick = function(element) {
+document.getElementById('submit').onclick = () => {
   const title = document.getElementById('title').value;
   const company = document.getElementById('company').value;
   const interest = document.getElementById('interest').value;
@@ -37,7 +38,7 @@ document.getElementById('submit').onclick = function(element) {
 function postToAirtable(postBody){
   var xhr = new XMLHttpRequest();
 
-  xhr.open("POST", 'https://api.airtable.com/v0/appjp1mWBsWIWgJse/Open%20Positions?api_key=keylFAs2bPeYqhYFt', true);
+  xhr.open("POST", `https://api.airtable.com/v0/${BASE_ID}/Open%20Positions?api_key=${API_KEY}`, true);
 
   xhr.setRequestHeader("Content-Type", "application/json");
 
