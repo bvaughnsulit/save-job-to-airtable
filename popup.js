@@ -14,8 +14,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
   });
 });
 
-
-document.getElementById('submit').onclick = () => {
+document.getElementById('options').addEventListener('submit', (event) => {
+  event.preventDefault();
   const title = document.getElementById('title').value;
   const company = document.getElementById('company').value;
   const interest = document.getElementById('interest').value;
@@ -33,7 +33,7 @@ document.getElementById('submit').onclick = () => {
   }
 
   postToAirtable(body);
-};
+})
 
 function postToAirtable(postBody){
   var xhr = new XMLHttpRequest();
