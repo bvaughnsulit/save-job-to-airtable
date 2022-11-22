@@ -1,5 +1,5 @@
 {
-  "name": "New Job To Airtable",
+  "name": "Airtable Job Tracker",
   "version": "0.0.1",
   "manifest_version": 3,
   "description": "",
@@ -8,10 +8,13 @@
     "default_title": "Send to Airtable",
     "default_popup": "popup.html"
   },
-
+  "background": {
+    "service_worker": "background.js"
+  },
   "permissions": [
     "activeTab",
-    "scripting"  
+    "scripting",
+    "contextMenus"
   ]
 }
 
