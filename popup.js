@@ -1,4 +1,6 @@
 import { API_KEY, BASE_ID } from './.config.js';
+
+const baseUrl = `https://api.airtable.com/v0/${BASE_ID}/Open%20Positions?api_key=${API_KEY}`
 let url
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
@@ -6,7 +8,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 
    chrome.scripting.executeScript({
     target: { tabId: tabs[0].id },
-    function: getSelection
+    function: () => { return window.getSelection().toString() }
   },
   (injectionResults) => {
     const selectedText = injectionResults[0].result
@@ -14,20 +16,21 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
   });
 });
 
-document.getElementById('options').addEventListener('submit', (event) => {
+const form = document.getElementById('options')
+
+form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const title = document.getElementById('title').value;
-  const company = document.getElementById('company').value;
-  const interest = document.getElementById('interest').value;
-  
+  const data = new FormData(form)
+ 
   const body = {
     "fields": {
-      "Title": title,
+      "Title": data.get('title'),
       "URL": url,
       "Company": [
-        company
+        data.get('company')
       ],
-      "Interest": interest,
+      "Interest": data.get('interest') || '',
+      "Submitted Date": data.get('isSubmitted') && new Date().toLocaleDateString('sv') 
     },
     "typecast": true
   }
@@ -35,22 +38,16 @@ document.getElementById('options').addEventListener('submit', (event) => {
   postToAirtable(body);
 })
 
-function postToAirtable(postBody){
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", `https://api.airtable.com/v0/${BASE_ID}/Open%20Positions?api_key=${API_KEY}`, true);
-
-  xhr.setRequestHeader("Content-Type", "application/json");
-
-  xhr.onreadystatechange = function(err) {
-      if (this.readyState === XMLHttpRequest.DONE) {
-        const success = JSON.parse(xhr.responseText).fields.Title
-        alert(`${success} created successfully!`)
-      } 
-  }
-  xhr.send(JSON.stringify(postBody));
-}
-
-function getSelection(){
-  return window.getSelection().toString()
+async function postToAirtable(postBody){
+  try {
+    const response = await fetch(baseUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(postBody)
+    })
+    const parsed = await response.json() 
+    const title = parsed.fields.Title
+    alert(`${title} created successfully!`)
+  } 
+  catch(e) { }
 }
